@@ -1,0 +1,132 @@
+<!--这个文件中的内容均为基本语法知识 适合入门级选手参考-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VueDemo</title>
+    <script src="../../resource/vue/vue.js"></script>
+
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+</head>
+<body>
+
+<!--root:vue实例的挂载点-->
+<div id="root">
+    <!--挂载点中的内容为模板 template 可以在vue实例中定义-->
+    <!--{{msg}} 插值表达式-->
+    <h1>{{msg}}</h1>
+    <!--v-text 会进行转义 展示一个变量中的字符串值 v-html 不会转义-->
+    <h1 v-text="number"></h1>
+    <h1 v-html="content"></h1>
+    <br>
+
+    <!--绑定事件和方法-->
+    <div v-on:click="changeMsg">{{msg1}}</div>
+    <!--简写-->
+    <div @click="changeMsg">{{msg2}}</div>
+    <!--<div v-on:click="()=>{alert(word)}">{{msg2}}}</div>-->
+    <br>
+
+    <!--属性绑定-->
+    <div v-bind:title="'哎呦 不错哦'+title">{{msg3}}</div>
+    <!--简写-->
+    <div :title="'哎呦 不错哦'+title">{{msg4}}</div>
+    <br>
+
+    <!--数据双向绑定-->
+    <input v-model="msg5"/>
+    <div>{{msg5}}</div>
+    <br>
+
+
+    <input v-model="msg6"/>
+    <input v-model="msg7"/>
+    <div>{{msg8}}</div>
+    <div>{{count}}</div>
+    <br>
+
+    <!--v-if 会删除dom, v-show只是添加了一个隐藏的属性 v-for 循环遍历一个集合-->
+    <div v-if="count <= 0">判断1：我想要两颗西柚@张老师</div>
+    <div v-else-if="count > 0 && count < 5">判断2：我想要两颗西柚@张老师</div>
+    <div v-else>else 没得</div>
+    <div v-show="show">我想要两颗西柚@张老师</div>
+    <button @click="buttonClick">按钮</button>
+    <ul>
+        <!--循环展示一个list key为每一项的唯一标识 list中每一项的值不相同时 可以使用key=item-->
+        <li v-for="item1 of list1" :key="item1">{{item1}}</li>
+    </ul>
+    <ul>
+        <!--item得到list中的每一个值 index为序号-->
+        <li v-for="(item2, index) of list2" :key="index" :style="styleMsg"
+            :class="['active', 'add', 'more', {'another':true}, {'lsh':item2 > 1}]">{{item2}}
+        </li>
+    </ul>
+    <br>
+
+</div>
+
+<script>
+    new Vue({
+        el: "#root",
+        // 挂载点所有的内容
+        // template:"<h1>你好呀 成都</h1>",
+        data: {
+            // 样式绑定
+            styleMsg: {
+                color: 'red',
+                textShadow: '0 0 5px yellow'
+            },
+            msg: "插值表达式{{msg}}",
+            msg1: "绑定事件和方法  v-on:click=\"changeMsg\" ",
+            msg2: "绑定事件和方法  @click=\"changeMsg\"",
+            msg3: "属性绑定  v-bind:title=\"'哎呦 不错哦'+title\"",
+            msg4: "属性绑定  :title=\"'哎呦 不错哦'+title\"",
+            msg5: "数据双向绑定 v-model=\"msg5\"",
+            msg6: "",
+            msg7: "",
+            number: 123,
+            content: "<div> v-html 测试</div>",
+            title: "这是一个属性绑定",
+            count: 0,
+            list1: [1, 2, 3],
+            list2: [1, 1, 3],
+            show: true
+
+        },
+        computed: {
+            // 当msg6 和 msg7 的值没有改变时 msg8 会使用上一次的缓存值 只有当值改变时才会重新计算
+            msg8: function () {
+                return this.msg6 + "" + this.msg7;
+            }
+        },
+        methods: {
+            changeMsg: function () {
+                //alert(123);
+                // 修改 dom中绑定的值
+                this.msg1 = "哈哈哈 点击之后 msg1 的值被修改了";
+            },
+            buttonClick: function () {
+                this.show = !this.show;
+            }
+        },
+        // 侦听器 监听摸个属性的变化  当 msg6 或者 msg7 的值改变时 count++
+        watch: {
+            /* msg6: function () {
+                 this.count++;
+             },
+             msg7: function () {
+                 this.count++;
+             },*/
+            // 或者
+            msg8: function () {
+                this.count++;
+            }
+        }
+    });
+</script>
+</body>
+</html>

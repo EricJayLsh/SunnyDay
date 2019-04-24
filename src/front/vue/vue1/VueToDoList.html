@@ -1,0 +1,91 @@
+<!--这是学完入门级知识之后可以实现的一个小功能 算是一点点应用-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>这是一个简单的演练</title>
+    <script src="../../resource/vue/vue.js"></script>
+</head>
+<body>
+<div>
+    <div id="root">
+        <input v-model="inputMsg"/>
+        <button @click="buttonClick">提交</button>
+        <!--不使用组件-->
+        <h2>不使用组件</h2>
+        <ul>
+            <li v-for="(item, index) of list" :key="index">{{item}}</li>
+        </ul>
+        <br>
+        <h2>使用全局组件</h2>
+        <ul>
+            <!--使用全局组件-->
+            <!--属性content 和 index  来传递参数  @deleteMe 绑定一个子组件的方法 要执行的父组件的方法名 deleteFromList -->
+            <todos-item v-for="(item,index) of list"
+                        :key="index"
+                        :content="item"
+                        :index="index"
+                        @delete="deleteFromList"
+            ></todos-item>
+        </ul>
+        <br>
+        <h2>使用局部组件</h2>
+        <ul>
+            <!--使用局部组件-->
+            <custom_component v-for="(item,index) of list"
+                              :key="index"
+                              :content="item"
+            ></custom_component>
+        </ul>
+    </div>
+</div>
+<script>
+    // 这是一个全局组件 任何位置都可以直接使用 todos-item :组件的名称
+    // 组件也是一个vue的实例
+    Vue.component('todos-item', {
+        // props 用于接收外部出过来的属性
+        props: ['content', 'index'],
+        // {{content}} 这里使用 props 中接收到的属性值 子组件中绑定一个方法点击方法 handerClick()
+        template: "<li @click='handerClick'>{{content}}</li>",
+        methods: {
+            handerClick: function (e) {
+                // 子组件向外同信 向外发布一个 deleteMe 方法 参数为 this.index
+                // 发布订阅模式
+                this.$emit('delete', this.index);
+            }
+        }
+    });
+    // 这是一个局部组件 需要在Vue实例中祖册 才能在对应的挂载点下使用
+    var Todos_item = {
+        props: ['content'],
+        template: "<li>{{content}}</li>"
+    }
+    new Vue({
+        el: "#root",
+        // 当前实例中注册一个组件
+        components: {
+            'custom_component': Todos_item
+        },
+        // 不定义template 时会默认将挂载点下的所有内容作为template的内容
+        // template:"",
+        data: {
+            inputMsg: '',
+            list: []
+        },
+        methods: {
+            buttonClick: function () {
+                this.list.push(this.inputMsg);
+                this.inputMsg = '';
+            },
+            // index 为子组件传递过来的参数
+            deleteFromList: function (index) {
+                // splice 删除集合中的元素 index 起始位置 1 长度
+                this.list.splice(index, 1);
+            }
+        }
+    });
+</script>
+
+
+</body>
+</html>
