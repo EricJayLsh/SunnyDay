@@ -9,7 +9,6 @@ import java.util.List;
 public class Data {
     public static List<Persion> getPersion() {
 
-        List<Persion> persions = Arrays.asList();
         List<Persion> persions = new ArrayList<>();
         persions.add(new Persion("小红", 10, "女"));
         persions.add(new Persion("小黑", 12, "女"));
